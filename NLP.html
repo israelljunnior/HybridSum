@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NLP</title>
+
+</head>
+
+<body>
+    <center>
+        <textarea id="textarea" rows="10"></textarea>
+        <button onClick="NLP()">Test it</button>
+        <p id="p1"></p>
+        <p id="p2"></p>
+        <p id="p3"></p>
+        <p id="p4"></p>
+        <p id="p5"></p>
+        <p id="p6"></p>
+        <p id="p7"></p>
+
+    </center>
+    <script src="./removeStopWords.js"> // função para remover StopWords</script>
+    <script src="./frequence.js"> // function frequence</script>
+    <script src="./frequenceSentece.js"> // function frequence</script>
+    <script>
+        // função principal chamado pelo event no button
+        // só funciona com uma sentença ainda
+        function NLP() {
+            var text = document.getElementById("textarea");
+            var string = text.value;
+            var word = "";
+            var sentence = "";
+            var words = new Array();
+            var sentences = new Array();
+            var purifiered;
+            var withoutStopWords;
+            var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
+            var arrayRelevantWordsInSetence = []; // sentences with only RelevantWords
+
+
+            function splitText(string) {
+                for (i = 0; i < string.length; i++) {
+
+
+
+                    //PRIMEIRO IF
+                    /*checar se o elemento do array string é diferente do casos de espaço, vírgula e ponto*/
+                    if (string[i] !== " " && string[i] !== "." && string[i] !== ",") {
+                        word += string[i]; // se as condições forem compridas, vai adicionar o elemento para a variável word e para sentença
+                        sentence += string[i];
+
+
+
+                    } else { /* caso não seja atendida a primeira condição,  o elemento continuará a entrar na variável sentença
+                mas será checado qual foi o caso que fez o primeiro if falhar
+                        */
+                        sentence += string[i];
+                        //SEGUNDO IF
+                        if (string[i] == " ") { /*caso o problema foi o espaço
+                        então ele não adicionará o elemento com espaço na variável word e dará o push no array de palavras
+                        depois reiniciando a variável que armazenou a palavra*/
+                            words.push(word);
+                            word = "";
+                        }
+                        //TERCEIRO IF
+                        if (string[i] == ",") { /*caso for uma vírgula ele vai fazer o mesmo que o if anterior só que...*/
+                            words.push(word);
+                            word = "";
+                            //QUARTO IF
+                            if (string[(i + 1)] == " ") { /*essa condição checa se o proximo caracter da string é um espaço,
+                         para não adicionar o espaço que iria entra na segundo if dentro do for, ela adicionar o espaço
+                         na sentença e incrementa no contador para que esse espaço não seja checado no loop*/
+                                sentence += " ";
+                                i++;
+                            }
+
+                        } // QUINTO IF
+                        if (string[i] == ".") { /*caso da sentença. todo valor que foi armazenado na variável sentença vai 
+                    ser colocado no array de sentenças e a palavra colocada na variável word não adicionar o elemento que
+                    entrou na condição, pelo fato de ser um ponto, e coloca a palavra no array de palavras*/
+                            sentences.push(sentence);
+                            words.push(word);
+                            sentence = ""; // reinicia a variável
+                            word = "";// reinicia a variável
+                            //SEXTO IF
+                            if (string[(i + 1)] == " ") { // o sexto if tem a mesma propósito do QUARTO IF
+                                sentence += " ";
+                                i++;
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+            
+            splitText(string);
+            purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
+            purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento do parâmetro e o substitue pelo caracter do segundo parâmentro
+            withoutStopWords = purifiered.removeStopWords();
+
+            for (i = 0, word = ""; i < withoutStopWords.length; i++) { //get all wordsRelevant
+                if (withoutStopWords.charAt(i) != " " && withoutStopWords.charAt(i) != "." && withoutStopWords.charAt(i) != ",") {
+                    word += withoutStopWords[i];
+
+                } else {
+                    if (withoutStopWords.charAt(i) == "." || withoutStopWords.charAt(i) == ",") {
+                        continue;
+                    } else {
+
+                        arrayRelevantWords.push(word);
+                        word = "";
+
+                    }
+                }
+
+
+            };
+            checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // the call function checkArrayStopWords ./frequencia.js
+            checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
+
+            /*var p = document.getElementById("p1");
+            p.innerHTML = "WORDS: " + words + "<br>"; //
+            var p2 = document.getElementById("p2");
+            p2.innerHTML = "SENTENCES: " + sentences + "<br>";
+            var p3 = document.getElementById("p3");
+            p3.innerHTML = "PURIFIERED: " + purifiered + "<br>";
+            var p4 = document.getElementById("p4");
+            p4.innerHTML = "WITHOUTSTOPWORDS: " + withoutStopWords + "<br>";
+            *///testes caso precise
+            /*var p5 = document.getElementById("p5");
+            p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
+            var p6 = document.getElementById("p6");
+            p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
+            */
+           
+                
+            
+           function printForEach(){
+            p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
+            var i = 0; //contador para arrayFrequenceText
+    arrayObjectWord.forEach(element => {
+                
+        p7.innerHTML = p7.innerHTML +
+            "word: " + element.word + "<br>NumberSentence: " + element.numberSentence +
+            "<br>Frenquece: " + element.frequence + "<br>" + "Frenquence text: " + arrayFrequenceText[i]+"<br>"+"<br>";
+            i++;
+            
+    });
+            
+                // new problem rapical detectada 
+        };
+        var p7 = document.getElementById("p7");
+            p7.innerHtml = printForEach();
+
+    };
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
