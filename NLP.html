@@ -20,10 +20,11 @@
         <p id="p7"></p>
 
     </center>
-    <script src="./removeStopWords.js"> // função para remover StopWords</script>
-    <script src="./frequence.js"> // function frequence</script>
+    
+    <script src="./frequenceText.js"> // function frequence</script>
     <script src="./frequenceSentece.js"> // function frequence</script>
-    <script src="./RankingScore.js"></script>
+    <script src="./wordFrequency.js"></script>
+    <script src="./scripts.js"></script>
     <script>
         // função principal chamado pelo event no button
         // só funciona com uma sentença ainda
@@ -39,7 +40,7 @@
             var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
             var arrayRelevantWordsInSetence = []; // sentences with only RelevantWords
 
-
+            removeHtmlXml(string);
             function splitText(string) {
                 for (i = 0; i < string.length; i++) {
 
@@ -119,10 +120,10 @@
 
 
             };
-            checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // the call function checkArrayStopWords ./frequencia.js
+            checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // call function checkArrayStopWords ./frequencia.js
             checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
 
-            /*var p = document.getElementById("p1");
+           /* var p = document.getElementById("p1");
             p.innerHTML = "WORDS: " + words + "<br>"; //
             var p2 = document.getElementById("p2");
             p2.innerHTML = "SENTENCES: " + sentences + "<br>";
@@ -130,11 +131,11 @@
             p3.innerHTML = "PURIFIERED: " + purifiered + "<br>";
             var p4 = document.getElementById("p4");
             p4.innerHTML = "WITHOUTSTOPWORDS: " + withoutStopWords + "<br>";
-            *///testes caso precise
-            /*var p5 = document.getElementById("p5");
+            //testes caso precise
+            var p5 = document.getElementById("p5");
             p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
-            var p6 = document.getElementById("p6");
-            p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
+            //var p6 = document.getElementById("p6");
+           // p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
             */
            
                 
