@@ -25,7 +25,7 @@ String.prototype.removeStopWords = function()
 {
 	words = new Array();
 	
-	this.replace(/\b[\w]+\b/g,
+	this.replace(/\b[\w\u00C0-\u00FF]+\b/ig,
 			function($0)
 			{
 				if(!String.isStopWord($0))
