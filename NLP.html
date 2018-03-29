@@ -23,6 +23,7 @@
     <script src="./removeStopWords.js"> // função para remover StopWords</script>
     <script src="./frequence.js"> // function frequence</script>
     <script src="./frequenceSentece.js"> // function frequence</script>
+    <script src="./RankingScore.js"></script>
     <script>
         // função principal chamado pelo event no button
         // só funciona com uma sentença ainda
@@ -142,13 +143,15 @@
             p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
             var i = 0; //contador para arrayFrequenceText
     arrayObjectWord.forEach(element => {
-                
+            element.frequenceText = arrayFrequenceText[i];
         p7.innerHTML = p7.innerHTML +
             "word: " + element.word + "<br>NumberSentence: " + element.numberSentence +
-            "<br>Frenquece: " + element.frequence + "<br>" + "Frenquence text: " + arrayFrequenceText[i]+"<br>"+"<br>";
+            "<br>Frenquece: " + element.frequence + "<br>" + "Frenquence text: " + element.frequenceText+"<br>"+"<br>";
             i++;
             
     });
+        rankingScore(arrayObjectWord);
+        
             
                 // new problem rapical detectada 
         };
