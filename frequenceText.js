@@ -1,7 +1,7 @@
 var arrayWordsText = [];
 var arrayFrequenceText = [];
 function wordFrequenceText(string, word) { // check if that word in ArrayRelevantWords includes in rest string
-    var frequence = new RegExp(word + '+', 'gi'); // Type of regular expression that will return an arrayWordsText with how many times this word resemble in the text  
+    var frequence = new RegExp("\\b"+word+"\\b", 'gi'); // Type of regular expression that will return an arrayWordsText with how many times this word resemble in the text  
     var result = string.match(frequence);
 
 

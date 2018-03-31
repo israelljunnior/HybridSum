@@ -3,7 +3,7 @@ var arrayObjectWord = [];
 var arrayCheckWord = [];
 
 function wordFrequenceSentence(sentence, object) {
-    var frequence = new RegExp(object.word + '+', 'gi'); // Type of regular expression that will return an arrayCheckWord with how many times this word resemble in the text  
+    var frequence = new RegExp("\\b"+object.word+"\\b", 'gi'); // Type of regular expression that will return an arrayCheckWord with how many times this word resemble in the text  
     var result = sentence.match(frequence);
 
     if (arrayCheckWord.includes(word)) { //dont put the same words many times

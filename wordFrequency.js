@@ -1,5 +1,5 @@
 
-function rankingScore(arrayObject){
+function rankingFrequence(arrayObject){
     if(arrayObject.length < 2 ){
         return arrayObject;
     }
@@ -7,7 +7,7 @@ function rankingScore(arrayObject){
     var left = arrayObject.slice(0,medium);
     var right = arrayObject.slice(medium,arrayObject.length);
 
-    return merge(rankingScore(left), rankingScore(right));
+    return merge(rankingFrequence(left), rankingFrequence(right));
 
 }
 
