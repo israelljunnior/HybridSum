@@ -9,9 +9,7 @@
 
 <body>
     <center>
-        <textarea id="textarea" rows="10" value="">Nada do que é social e humano é mais real que as utopias. Na sua vertente eutópica, as utopias constituíram sempre o fundamento simbólico e mítico sem o qual nenhuma forma de organização social se sustenta, justifica ou sobrevive. E criam, tanto na vertente eutópica como na distópica, o vocabulário da revolução e da mudança: sem os amanhãs que cantam (ou choram) teríamos, em vez de História, um presente intemporal e eterno - como o dos faraós ou o de Francis Fukuyama.
-            Aldous Huxley publicou o seu Brave New World em 1932. George Orwell, que não tinha em grande conta este livro ou o seu autor, publicou 17 anos depois a sua própria distopia, Nineteen Eighty-Four. Entre estas duas datas interpôs-se a Segunda Grande Guerra: não admira que na primeira a técnica básica da opressão do Estado fosse a manipulação genética e que na segunda, depois do descrédito em que o regime nazi lançou o eugenismo, as técnicas principais da opressão sejam a lavagem ao cérebro, a crueldade gratuita e a manipulação da linguagem.
-            Apesar desta e de outras diferenças, os dois textos foram muitas vezes lidos, nas décadas seguintes, como os dois pólos - um hedonista, outro o oposto disto - duma mesma distopia, a que os sinais dos tempos davam e dão plausibilidade. Esta distopia bipolar é identificável em grande parte com a ideia de modernidade; e hoje a invocação da modernidade, sempre na boca dos políticos e dos capitães da indústria, soa aos nossos ouvidos tanto a ameaça como a promessa.</textarea>
+        <textarea id="textarea" rows="10" value="">Social Social do que é social e humano é mais real.</textarea>
         <button onClick="NLP()">Test it</button>
         <p id="p1"></p>
         <p id="p2"></p>
@@ -20,27 +18,29 @@
         <p id="p5"></p>
         <p id="p6"></p>
         <p id="p7"></p>
+        <p id="p8"></p>
 
     </center>
-    
+
     <script src="./frequenceText.js"> // function frequence</script>
     <script src="./frequenceSentece.js"> // function frequence</script>
     <script src="./wordFrequency.js"></script>
     <script src="./scripts.js"></script>
     <script src="./TF-IDF.js"></script>
     <script src="./require.js"></script>
-    
+    <script src="./Upper-case.js"></script>
 
-    
 
-    
-    
+
+
+
+
     <script>
         // função principal chamado pelo event no button
         // só funciona com uma sentença aindare
 
         function NLP() {
-            
+
             /*define(['require','google-translate-api',], function(require){
                  var translate =  require['google-translate-api'];
                 
@@ -115,33 +115,41 @@
 
                 }
             }
-            
+
             splitText(string);
             purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
-            purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento do parâmetro e o substitue pelo caracter do segundo parâmentro
+            purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento d(o parâmetro e o substitue pelo caracter do segundo parâmentro
             withoutStopWords = purifiered.removeStopWords();
 
-            for (i = 0, word = ""; i < withoutStopWords.length; i++) { //get all wordsRelevant
-                if (withoutStopWords.charAt(i) != " " && withoutStopWords.charAt(i) != "." && withoutStopWords.charAt(i) != ",") {
-                    word += withoutStopWords[i];
+            for (i = 0; i < words.length; i++) {
+                var regex = new RegExp(/[\w\u00C0-\u00FF]/ig);
+                if (words[i].removeStopWords().match(regex)) {
+                    if (arrayRelevantWords.length > 0) {
+                        t = true;
+                        arrayRelevantWords.forEach(wordR => {
+                            if (wordR.toUpperCase() == words[i].toUpperCase()) {
+                                t = false;
+                            }
 
-                } else {
-                    if (withoutStopWords.charAt(i) == "." || withoutStopWords.charAt(i) == ",") {
-                        continue;
+                        });
+
+                        if (t == true) {
+                            arrayRelevantWords.push(words[i].removeStopWords());
+                        }
+
                     } else {
 
-                        arrayRelevantWords.push(word);
-                        word = "";
-
+                        arrayRelevantWords.push(words[i].removeStopWords());
                     }
                 }
 
 
             };
+
             checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // call function checkArrayStopWords ./frequencia.js
             checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
 
-           /*var p = document.getElementById("p1");
+            var p = document.getElementById("p1");
             p.innerHTML = "WORDS: " + words + "<br>"; //
             var p2 = document.getElementById("p2");
             p2.innerHTML = "SENTENCES: " + sentences + "<br>";
@@ -153,37 +161,50 @@
             var p5 = document.getElementById("p5");
             p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
             //var p6 = document.getElementById("p6");
-           // p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
-            */
-           
-                
-            
-           function printForEach(){
-            p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
-            var i = 0; //contador para arrayFrequenceText
-    arrayObjectWord.forEach(objectWord => {
-            objectWord.frequenceText = arrayFrequenceText[i];
-            objectWord.tf_idf = TF_IDF(objectWord, sentences, arrayObjectWord);
-        p7.innerHTML = p7.innerHTML +
-            "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
-            "<br>Frenquece: " + objectWord.frequence + "<br>" + "Frenquence text: " +
-            objectWord.frequenceText+"<br>"+"TF-IDF: "+ objectWord.tf_idf +"<br><br>";
-            i++;
-            
-    });
-        rankingFrequence(arrayObjectWord);
-        rankingTF_IDF(arrayObjectWord);
-        
-        
+            // p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
 
-        
-            
+
+
+
+            function printForEach() {
+                p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
+                var i = 0; //contador para arrayFrequenceText
+                arrayObjectWord.forEach(objectWord => {
+                    objectWord.frequenceText = arrayFrequenceText[i];
+                    TF_IDF(objectWord, sentences, arrayObjectWord);
+                    p7.innerHTML = p7.innerHTML +
+                        "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
+                        "<br>Frenquece: " + objectWord.frequence + "<br>" + "Frenquence text: " +
+                        objectWord.frequenceText + "<br>" + "TF-IDF: " + objectWord.tf_idf + "<br><br>";
+                    i++;
+
+                });
+
+                rankingFrequence(arrayObjectWord);
+                rankingTF_IDF(arrayObjectWord);
                 // new problem rapical detectada 
-        };
-        var p7 = document.getElementById("p7");
+            };
+            var sentencesWithoutStopWords = [];
+
+            for (i = 0; i < sentences.length; i++) {
+                var swsw = sentences[i].removeStopWords();
+
+                sentencesWithoutStopWords.push(swsw);
+
+            }
+
+            var p7 = document.getElementById("p7");
             p7.innerHtml = printForEach();
 
-    };
+            /*upperCase(sentencesWithoutStopWords, arrayObjectWord); 
+            var p8 = document.getElementById("p8");
+                p8.innerHTML = "";
+                arrayObjectSentence.forEach(element => { 
+               p8.innerHTML = p8.innerHTML +"Score: "+ element.score+"<br>";
+            });*/
+
+
+        };
 
 
 

@@ -26,12 +26,7 @@ function checkArrayRelevantWordsSentences(sentences, arrayRelevantWords) {
     arrayCheckWord = [];
     arrayObjectWord = [];
     for (i = 0,word = ""; i < arrayRelevantWords.length; i++) {
-
-        if (arrayCheckWord.includes(arrayRelevantWords[i])) { //verifection if the Word in ArrayRelevant is already included;  
-            continue;
-
-        } else {
-            
+        
             word = arrayRelevantWords[i];
             arrayRelevantWords[i] = new Object(); // change the word to object
             arrayRelevantWords[i].word = word;
@@ -50,7 +45,7 @@ function checkArrayRelevantWordsSentences(sentences, arrayRelevantWords) {
             //release the object word for other word
              word = "";
         } 
-        
     }
+    
 
-}
+

@@ -19,9 +19,8 @@ function IDF(sentences, objectWord){
 
 function TF_IDF(objectWord, sentences, arrayObjectWord){
     
-    return TF(objectWord, arrayObjectWord) * IDF(sentences, objectWord); 
+    objectWord.tf_idf = TF(objectWord, arrayObjectWord) * IDF(sentences, objectWord); 
     
-
 }
 
 function rankingTF_IDF(arrayObject){

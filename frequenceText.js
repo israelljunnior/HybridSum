@@ -15,14 +15,9 @@ function checkArrayRelevantWordsString(string, arrayRelevantWords) {
     arrayWordsText = [];// reset array
     arrayFrequenceText = [];// reset array
     for (i = 0; i < arrayRelevantWords.length; i++) {
-
-        if (arrayWordsText.includes(arrayRelevantWords[i])) { //verifection if the Word in ArrayRelevant is already included;  
-            continue;
-            
-        } else {
-            wordFrequenceText(string, arrayRelevantWords[i]);
-        }
-
+        
+        wordFrequenceText(string, arrayRelevantWords[i]);
+        
     }
 
 }
