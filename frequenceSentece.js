@@ -1,5 +1,4 @@
 var arrayObjectWord = [];
-
 var arrayCheckWord = [];
 
 function wordFrequenceSentence(sentence, object) {

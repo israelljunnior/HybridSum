@@ -1,27 +1,51 @@
 
-function  TF(objectWord, arrayObjectWord){
+function  TF(objectWord, sentences, i, arrayRelevantWords){
+    
+    var amountWordsSentence = 0;   
+    for(j = 0; j < arrayRelevantWords.length; j++){
+            
+          
+            if(sentences.toUpperCase().match("\\b"+arrayRelevantWords[j].word.toUpperCase()+"\\b", 'g') != null){
+                
+                
+                 amountWordsSentence += arrayRelevantWords[j].frequence[i] ;         
+                        
+                }
+        }
         
-    return (objectWord.frequenceText / arrayObjectWord.length);
-
+        
+    return (objectWord.frequence[i] / amountWordsSentence);
 }
 
 function IDF(sentences, objectWord){
     var sentenceWithObjectWord = 0;
     for(i = 0; i < objectWord.numberSentence.length; i++){
         if(objectWord.frequence[i] > 0)
-        sentenceWithObjectWord++;   
+        sentenceWithObjectWord++;  
 
     }
     
+   
     return  Math.log((sentences.length / sentenceWithObjectWord));
     
 }
 
-function TF_IDF(objectWord, sentences, arrayObjectWord){
+function TF_IDF(objectWord, sentences, arrayRelevantWords){
     
-    objectWord.tf_idf = TF(objectWord, arrayObjectWord) * IDF(sentences, objectWord); 
+    objectWord.tf_idf = [];
     
+    const idf = IDF(sentences, objectWord);
+    for(i = 0; i < sentences.length; i++){
+        if(objectWord.frequence[i] > 0 ){
+            
+            objectWord.tf_idf.push(" S"+(i+1)+": "+(TF(objectWord, sentences[i], i, arrayRelevantWords) * idf)); 
+        } else {
+            objectWord.tf_idf.push(" S"+(i+1)+": "+0);
+
+        }
+    }
 }
+
 
 function rankingTF_IDF(arrayObject){
     if(arrayObject.length < 2 ){

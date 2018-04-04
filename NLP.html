@@ -9,7 +9,7 @@
 
 <body>
     <center>
-        <textarea id="textarea" rows="10" value="">Social Social do que é social e humano é mais real.</textarea>
+        <textarea id="textarea" rows="10" value="">the president talks about uconn.  Apple stock is hot. the job market is hot and hot.</textarea>
         <button onClick="NLP()">Test it</button>
         <p id="p1"></p>
         <p id="p2"></p>
@@ -149,7 +149,7 @@
             checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // call function checkArrayStopWords ./frequencia.js
             checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
 
-            var p = document.getElementById("p1");
+           var p = document.getElementById("p1");
             p.innerHTML = "WORDS: " + words + "<br>"; //
             var p2 = document.getElementById("p2");
             p2.innerHTML = "SENTENCES: " + sentences + "<br>";
@@ -162,16 +162,24 @@
             p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
             //var p6 = document.getElementById("p6");
             // p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
+                
 
 
+            var sentencesWithoutStopWords = [];
 
+            for (i = 0; i < sentences.length; i++) {
+                var swsw = sentences[i].removeStopWords();
 
+            sentencesWithoutStopWords.push(swsw);
+
+            }       
+            
             function printForEach() {
                 p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
                 var i = 0; //contador para arrayFrequenceText
                 arrayObjectWord.forEach(objectWord => {
                     objectWord.frequenceText = arrayFrequenceText[i];
-                    TF_IDF(objectWord, sentences, arrayObjectWord);
+                    TF_IDF(objectWord, sentencesWithoutStopWords, arrayRelevantWords);
                     p7.innerHTML = p7.innerHTML +
                         "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
                         "<br>Frenquece: " + objectWord.frequence + "<br>" + "Frenquence text: " +
@@ -184,14 +192,7 @@
                 rankingTF_IDF(arrayObjectWord);
                 // new problem rapical detectada 
             };
-            var sentencesWithoutStopWords = [];
-
-            for (i = 0; i < sentences.length; i++) {
-                var swsw = sentences[i].removeStopWords();
-
-                sentencesWithoutStopWords.push(swsw);
-
-            }
+            
 
             var p7 = document.getElementById("p7");
             p7.innerHtml = printForEach();
