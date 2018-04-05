@@ -1,3 +1,5 @@
+
+
 var arrayObjectWord = [];
 var arrayCheckWord = [];
 
@@ -45,6 +47,6 @@ function checkArrayRelevantWordsSentences(sentences, arrayRelevantWords) {
              word = "";
         } 
     }
-    
+
 
 

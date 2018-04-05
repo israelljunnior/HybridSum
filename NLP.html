@@ -9,7 +9,7 @@
 
 <body>
     <center>
-        <textarea id="textarea" rows="10" value="">the president talks about uconn.  Apple stock is hot. the job market is hot and hot.</textarea>
+        <textarea id="textarea" rows="10" value="">Social Social Social. Social Social.</textarea>
         <button onClick="NLP()">Test it</button>
         <p id="p1"></p>
         <p id="p2"></p>
@@ -22,194 +22,189 @@
 
     </center>
 
-    <script src="./frequenceText.js"> // function frequence</script>
-    <script src="./frequenceSentece.js"> // function frequence</script>
-    <script src="./wordFrequency.js"></script>
-    <script src="./scripts.js"></script>
-    <script src="./TF-IDF.js"></script>
-    <script src="./require.js"></script>
-    <script src="./Upper-case.js"></script>
+    <script src="./scripts/frequenceSentece.js"></script>
+    <script src="./scripts/frequenceText.js"></script>
+    <script src="./scripts/removeStopWords.js"></script>
+    <script src="./scripts/TF-IDF.js"></script>
+    <script src="./scripts/upper-case.js"></script>
+    <script src="./scripts/wordFrequency.js"></script>
+    <scrip src="./scripts/translate-api.js"></script>
+    
 
 
 
 
 
 
-    <script>
-        // função principal chamado pelo event no button
-        // só funciona com uma sentença aindare
 
-        function NLP() {
+<script>
 
-            /*define(['require','google-translate-api',], function(require){
-                 var translate =  require['google-translate-api'];
-                
-            });
+
+function NLP(){
+
+    
+var originLanguages = "";
+var stringTranslated = "";
+var text = document.getElementById("textarea");
+var string = text.value//translate(text.value, stringTranslated, originLanguages);
+var word = "";
+var sentence = "";
+var words = new Array();
+var sentences = new Array();
+var purifiered;
+var withoutStopWords;
+var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
+var arrayRelevantWordsInSetence = []; // sentences with only RelevantWords
+
+removeHtmlXml(string);
+function splitText(string) {
+    for (i = 0; i < string.length; i++) {
+
+
+
+        //PRIMEIRO IF
+        /*checar se o elemento do array string é diferente do casos de espaço, vírgula e ponto*/
+        if (string[i] !== " " && string[i] !== "." && string[i] !== ",") {
+            word += string[i]; // se as condições forem compridas, vai adicionar o elemento para a variável word e para sentença
+            sentence += string[i];
+
+
+
+        } else { /* caso não seja atendida a primeira condição,  o elemento continuará a entrar na variável sentença
+    mas será checado qual foi o caso que fez o primeiro if falhar
             */
-            var text = document.getElementById("textarea");
-            var string = text.value//translate(text.value,{to:'en'});
-            //alert(string);
-            var word = "";
-            var sentence = "";
-            var words = new Array();
-            var sentences = new Array();
-            var purifiered;
-            var withoutStopWords;
-            var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
-            var arrayRelevantWordsInSetence = []; // sentences with only RelevantWords
-
-            removeHtmlXml(string);
-            function splitText(string) {
-                for (i = 0; i < string.length; i++) {
-
-
-
-                    //PRIMEIRO IF
-                    /*checar se o elemento do array string é diferente do casos de espaço, vírgula e ponto*/
-                    if (string[i] !== " " && string[i] !== "." && string[i] !== ",") {
-                        word += string[i]; // se as condições forem compridas, vai adicionar o elemento para a variável word e para sentença
-                        sentence += string[i];
-
-
-
-                    } else { /* caso não seja atendida a primeira condição,  o elemento continuará a entrar na variável sentença
-                mas será checado qual foi o caso que fez o primeiro if falhar
-                        */
-                        sentence += string[i];
-                        //SEGUNDO IF
-                        if (string[i] == " ") { /*caso o problema foi o espaço
-                        então ele não adicionará o elemento com espaço na variável word e dará o push no array de palavras
-                        depois reiniciando a variável que armazenou a palavra*/
-                            words.push(word);
-                            word = "";
-                        }
-                        //TERCEIRO IF
-                        if (string[i] == ",") { /*caso for uma vírgula ele vai fazer o mesmo que o if anterior só que...*/
-                            words.push(word);
-                            word = "";
-                            //QUARTO IF
-                            if (string[(i + 1)] == " ") { /*essa condição checa se o proximo caracter da string é um espaço,
-                         para não adicionar o espaço que iria entra na segundo if dentro do for, ela adicionar o espaço
-                         na sentença e incrementa no contador para que esse espaço não seja checado no loop*/
-                                sentence += " ";
-                                i++;
-                            }
-
-                        } // QUINTO IF
-                        if (string[i] == ".") { /*caso da sentença. todo valor que foi armazenado na variável sentença vai 
-                    ser colocado no array de sentenças e a palavra colocada na variável word não adicionar o elemento que
-                    entrou na condição, pelo fato de ser um ponto, e coloca a palavra no array de palavras*/
-                            sentences.push(sentence);
-                            words.push(word);
-                            sentence = ""; // reinicia a variável
-                            word = "";// reinicia a variável
-                            //SEXTO IF
-                            if (string[(i + 1)] == " ") { // o sexto if tem a mesma propósito do QUARTO IF
-                                sentence += " ";
-                                i++;
-                            }
-
-                        }
-
-                    }
-
+            sentence += string[i];
+            //SEGUNDO IF
+            if (string[i] == " ") { /*caso o problema foi o espaço
+            então ele não adicionará o elemento com espaço na variável word e dará o push no array de palavras
+            depois reiniciando a variável que armazenou a palavra*/
+                words.push(word);
+                word = "";
+            }
+            //TERCEIRO IF
+            if (string[i] == ",") { /*caso for uma vírgula ele vai fazer o mesmo que o if anterior só que...*/
+                words.push(word);
+                word = "";
+                //QUARTO IF
+                if (string[(i + 1)] == " ") { /*essa condição checa se o proximo caracter da string é um espaço,
+             para não adicionar o espaço que iria entra na segundo if dentro do for, ela adicionar o espaço
+             na sentença e incrementa no contador para que esse espaço não seja checado no loop*/
+                    sentence += " ";
+                    i++;
                 }
+
+            } // QUINTO IF
+            if (string[i] == ".") { /*caso da sentença. todo valor que foi armazenado na variável sentença vai 
+        ser colocado no array de sentenças e a palavra colocada na variável word não adicionar o elemento que
+        entrou na condição, pelo fato de ser um ponto, e coloca a palavra no array de palavras*/
+                sentences.push(sentence);
+                words.push(word);
+                sentence = ""; // reinicia a variável
+                word = "";// reinicia a variável
+                //SEXTO IF
+                if (string[(i + 1)] == " ") { // o sexto if tem a mesma propósito do QUARTO IF
+                    sentence += " ";
+                    i++;
+                }
+
             }
 
-            splitText(string);
-            purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
-            purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento d(o parâmetro e o substitue pelo caracter do segundo parâmentro
-            withoutStopWords = purifiered.removeStopWords();
+        }
 
-            for (i = 0; i < words.length; i++) {
-                var regex = new RegExp(/[\w\u00C0-\u00FF]/ig);
-                if (words[i].removeStopWords().match(regex)) {
-                    if (arrayRelevantWords.length > 0) {
-                        t = true;
-                        arrayRelevantWords.forEach(wordR => {
-                            if (wordR.toUpperCase() == words[i].toUpperCase()) {
-                                t = false;
-                            }
+    }
+}
 
-                        });
+splitText(string);
+purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
+purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento d(o parâmetro e o substitue pelo caracter do segundo parâmentro
+withoutStopWords = purifiered.removeStopWords();
 
-                        if (t == true) {
-                            arrayRelevantWords.push(words[i].removeStopWords());
-                        }
-
-                    } else {
-
-                        arrayRelevantWords.push(words[i].removeStopWords());
-                    }
+for (i = 0; i < words.length; i++) {
+    var regex = new RegExp(/[\w\u00C0-\u00FF]/ig);
+    if (words[i].removeStopWords().match(regex)) {
+        if (arrayRelevantWords.length > 0) {
+            t = true;
+            arrayRelevantWords.forEach(wordR => {
+                if (wordR.toUpperCase() == words[i].toUpperCase()) {
+                    t = false;
                 }
 
+            });
 
-            };
+            if (t == true) {
+                arrayRelevantWords.push(words[i].removeStopWords());
+            }
 
-            checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // call function checkArrayStopWords ./frequencia.js
-            checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
+        } else {
 
-           var p = document.getElementById("p1");
-            p.innerHTML = "WORDS: " + words + "<br>"; //
-            var p2 = document.getElementById("p2");
-            p2.innerHTML = "SENTENCES: " + sentences + "<br>";
-            var p3 = document.getElementById("p3");
-            p3.innerHTML = "PURIFIERED: " + purifiered + "<br>";
-            var p4 = document.getElementById("p4");
-            p4.innerHTML = "WITHOUTSTOPWORDS: " + withoutStopWords + "<br>";
-            //testes caso precise
-            var p5 = document.getElementById("p5");
-            p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
-            //var p6 = document.getElementById("p6");
-            // p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
-                
+            arrayRelevantWords.push(words[i].removeStopWords());
+        }
+    }
 
 
-            var sentencesWithoutStopWords = [];
+};
 
-            for (i = 0; i < sentences.length; i++) {
-                var swsw = sentences[i].removeStopWords();
+checkArrayRelevantWordsString(purifiered, arrayRelevantWords); // call function checkArrayStopWords ./frequencia.js
+checkArrayRelevantWordsSentences(sentences, arrayRelevantWords);
 
-            sentencesWithoutStopWords.push(swsw);
-
-            }       
-            
-            function printForEach() {
-                p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
-                var i = 0; //contador para arrayFrequenceText
-                arrayObjectWord.forEach(objectWord => {
-                    objectWord.frequenceText = arrayFrequenceText[i];
-                    TF_IDF(objectWord, sentencesWithoutStopWords, arrayRelevantWords);
-                    p7.innerHTML = p7.innerHTML +
-                        "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
-                        "<br>Frenquece: " + objectWord.frequence + "<br>" + "Frenquence text: " +
-                        objectWord.frequenceText + "<br>" + "TF-IDF: " + objectWord.tf_idf + "<br><br>";
-                    i++;
-
-                });
-
-                rankingFrequence(arrayObjectWord);
-                rankingTF_IDF(arrayObjectWord);
-                // new problem rapical detectada 
-            };
-            
-
-            var p7 = document.getElementById("p7");
-            p7.innerHtml = printForEach();
-
-            /*upperCase(sentencesWithoutStopWords, arrayObjectWord); 
-            var p8 = document.getElementById("p8");
-                p8.innerHTML = "";
-                arrayObjectSentence.forEach(element => { 
-               p8.innerHTML = p8.innerHTML +"Score: "+ element.score+"<br>";
-            });*/
+var p = document.getElementById("p1");
+p.innerHTML = "WORDS: " + words + "<br>"; //
+var p2 = document.getElementById("p2");
+p2.innerHTML = "SENTENCES: " + sentences + "<br>";
+var p3 = document.getElementById("p3");
+p3.innerHTML = "PURIFIERED: " + purifiered + "<br>";
+var p4 = document.getElementById("p4");
+p4.innerHTML = "WITHOUTSTOPWORDS: " + withoutStopWords + "<br>";
+//testes caso precise
+var p5 = document.getElementById("p5");
+p5.innerHTML = "FREQUENCETEXT: " + arrayWordsText + "<br>" + arrayFrequenceText;
+//var p6 = document.getElementById("p6");
+// p6.innerHTML = "FREQUENCESENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSentence;
+    
 
 
-        };
+var sentencesWithoutStopWords = [];
+
+for (i = 0; i < sentences.length; i++) {
+    var swsw = sentences[i].removeStopWords();
+
+sentencesWithoutStopWords.push(swsw);
+
+}       
+
+function printForEach() {
+    p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
+    var i = 0; //contador para arrayFrequenceText
+    arrayObjectWord.forEach(objectWord => {
+        objectWord.frequenceText = arrayFrequenceText[i];
+        TF_IDF(objectWord, sentencesWithoutStopWords, arrayRelevantWords);
+        p7.innerHTML = p7.innerHTML +
+            "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
+            "<br>Frenquece: " + objectWord.frequence + "<br>" + "Frenquence text: " +
+            objectWord.frequenceText + "<br>" + "TF-IDF: " + objectWord.tf_idf + "<br><br>";
+        i++;
+
+    });
+
+    rankingFrequence(arrayObjectWord);
+    rankingTF_IDF(arrayObjectWord);
+    // new problem rapical detectada 
+};
+
+
+var p7 = document.getElementById("p7");
+p7.innerHtml = printForEach();
+upperCase(sentencesWithoutStopWords, words); 
+var p8 = document.getElementById("p8");
+    p8.innerHTML = "";
+    arrayObjectSentence.forEach(S => { 
+   p8.innerHTML = p8.innerHTML +"Index: "+S.index+"<br>"+"Score: "+ S.score+"<br>";
+    });
+ 
 
 
 
-
+};
 
 
     </script>

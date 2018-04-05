@@ -2,13 +2,14 @@
 function  TF(objectWord, sentences, i, arrayRelevantWords){
     
     var amountWordsSentence = 0;   
+    
     for(j = 0; j < arrayRelevantWords.length; j++){
             
           
             if(sentences.toUpperCase().match("\\b"+arrayRelevantWords[j].word.toUpperCase()+"\\b", 'g') != null){
                 
                 
-                 amountWordsSentence += arrayRelevantWords[j].frequence[i] ;         
+                 amountWordsSentence += arrayRelevantWords[j].frequence[i];         
                         
                 }
         }
@@ -79,3 +80,4 @@ function merge(left, right){
     return ranking;
 
 }
+

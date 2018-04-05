@@ -1,3 +1,4 @@
+
 var arrayWordsText = [];
 var arrayFrequenceText = [];
 function wordFrequenceText(string, word) { // check if that word in ArrayRelevantWords includes in rest string
