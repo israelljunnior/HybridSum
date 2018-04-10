@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="utf-8" />
+    <title>NLP</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+    
+        #div1{
+            
+        }
+      #button-summ{
+        position: absolute;
+        transition: .5s ease;
+        top: 49%;
+        left: 56%;
+        }
+
+        #textarea{
+            position: relative;
+            left:30%;
+            top:5%;
+        }
+        #input{
+        width: 10%;
+        position: absolute;
+        transition: .5s ease;
+        top: 49%;
+        left: 41.2%;
+        }
+        #button-reset{
+        position: absolute;
+        transition: .5s ease;
+        top: 49%;
+        left: 51.3%;
+        }
+       
+        </style>
+</head>
+
+<body>
+        
+        <div class="form-group" id="div1">
+            
+
+            <input id="input" class="form-control"  type="text" placeholder="length of summ">
+            <textarea class="col-xs-4" id="textarea" rows="15">
+            </textarea>
+            <button id="button-summ" class="btn btn-primary active" onClick="NLP();">Summarizer</button>
+            <button id="button-reset" class="btn btn-primary active" onClick="resetToTextOriginal(text,textOriginal)">Reset</button>
+        
+        </div>
+    
+    
+    <script src="./scripts/fixText.js"></script>
+    <script src="./scripts/frequenceSentece.js"></script>
+    <script src="./scripts/frequenceText.js"></script>
+    <script src="./scripts/removeStopWords.js"></script>
+    <script src="./scripts/TF-IDF.js"></script>
+    <script src="./scripts/upper-case.js"></script>
+    <script src="./scripts/wordFrequency.js"></script>
+    <scrip src="./scripts/translate-api.js"></script>
+    <script src="./scripts/Summarizer.js"></script>
+
+<script>
+var text
+var textOriginal;
+
+function NLP(){
+
+
+var originLanguages = "";
+var stringTranslated = "";
+text = document.getElementById('textarea');
+var textOriginal = text.value;
+var string = text.value//translate(text.value, stringTranslated, originLanguages);
+var numbers = string.match(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g);
+var sentence = "";
+var words = string.match(/(\w|\s)*\w(?=")|[\w\u00C0-\u00FF]+/g);
+var sentences = new Array();
+var purifiered;
+var withoutStopWords;
+var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
+var arrayObjectWord = [];
+var arrayObjectSentence = []; // sentences with only RelevantWords
+
+string = removeHtmlXml(string);
+string = fixText(string);
+
+function splitText(string) {
+    for (i = 0; i < string.length; i++){
+
+        //PRIMEIRO IF
+        /*checar se o elemento do array string é diferente do casos de espaço, vírgula e ponto*/
+            sentence += string[i];
+            //SEGUNDO I                
+  
+            if (string[i] == "." || string[i] == "?" || string[i] == ";") { 
+
+                if('0123456789'.indexOf(string[i+1]) == -1){
+                if(string[i+1] == "." && string[i+2] == "." ){
+                    sentence += string[i+1];
+                    sentence += string[i+2];
+                    sentences.push(sentence);
+                    sentence = "";
+                    i += 2;
+                } else{
+                    sentences.push(sentence);
+                    sentence = "";
+                }
+            }
+        }
+    }
+}
+splitText(string);
+purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
+purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento d(o parâmetro e o substitue pelo caracter do segundo parâmentro
+withoutStopWords = purifiered.removeStopWords();
+
+for (i = 0; i < words.length; i++) {
+    var regex = new RegExp(/[\w\u00C0-\u00FF]/ig);
+    if (words[i].removeStopWords().match(regex)) {
+        if (arrayRelevantWords.length > 0) {
+            t = true;
+            arrayRelevantWords.forEach(wordR => {
+                if (wordR.toUpperCase() == words[i].toUpperCase()) {
+                    t = false;
+                }
+                
+            });
+
+            if (t == true) {
+                
+                arrayRelevantWords.push(words[i].removeStopWords());
+                    
+            }
+
+        } else {
+            
+            arrayRelevantWords.push(words[i].removeStopWords());
+        }
+    }
+
+
+};
+
+arrayRelevantWords.forEach(word =>{
+    w = word; 
+    word = new Object(); // change the word to object
+    word.word = w;
+    word.numberSentence = [];
+    word.frequenceSen = [];
+    word.frequenceText;
+    word.tf_idf=[];
+    arrayObjectWord.push(word);
+});
+i = 0;
+sentences.forEach(s =>{
+    
+    sentence = s;
+    s = new Object();
+    s.sentence = sentence;
+    s.tf_idf = [];
+    s.upperCaseScore;
+    s.index = i;
+    s.score = 0;
+    
+    arrayObjectSentence.push(s);
+    i++;
+});
+
+checkArrayRelevantWordsString(string, arrayObjectWord); // call function checkArrayStopWords ./frequencia.js
+checkArrayRelevantWordsSentences(sentences, arrayObjectWord);
+    
+
+var sentencesWithoutStopWords = [];
+
+for (i = 0; i < sentences.length; i++) {
+    var swsw = sentences[i].removeStopWords();
+
+sentencesWithoutStopWords.push(swsw);
+
+}       
+
+function printForEach() {
+    p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
+    var i = 0; //contador para arrayFrequenceText
+
+    arrayObjectWord.forEach(objectWord => {
+        p7.innerHTML = p7.innerHTML +
+            "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
+            "<br>Frenquece: " + objectWord.frequenceSen + "<br>" + "Frenquence text: " +
+            objectWord.frequenceText + "<br>" + "TF-IDF: " + objectWord.tf_idf + "<br><br>";
+        i++;
+
+    });
+    
+    
+    // new problem rapical detectada 
+};
+
+
+
+upperCase(arrayObjectSentence, words, arrayObjectWord);
+TF_IDF(arrayObjectSentence, arrayObjectWord);
+
+    arrayObjectSentence.forEach(S =>{   
+        
+    S.score += S.tf_idf;
+    
+    });
+
+    
+    var numberSentence = document.getElementById('input');
+    parseInt(numberSentence);
+    if(numberSentence.value >= arrayObjectSentence.length || numberSentence.value < 1){
+    alert("warning");
+    
+    } else {
+        text.value = "";
+        summarizer(arrayObjectSentence,numberSentence.value).forEach(s => {
+        text.value = text.value+s.sentence;
+        });
+    }
+
+};
+
+
+function resetToTextOriginal(jog,jooj){
+    jog.innerHTML = jooj;
+}
+    </script>
+</body>
+</html>

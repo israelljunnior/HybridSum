@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="utf-8" />
+    <title>NLP</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+        #textarea   {rows:30px;}
+        </style>
+</head>
+
+<body>
+
+    <div class="form-group">
+        <textarea class="form-control" id="textarea" rows="15" cols="10">The main use case scenario of the Mobile Summarizer
+        works as follow: firstly, the user provides both the input
+        document and the summarization parameters, such as
+        compression ratio and the desired scoring methods to be
+        employed. Then the text preprocessing stage analyses the
+        input text by breaking it up into words, sentences, and
+        removing irrelevant words (stop words). In the sequence, the
+        scoring methods calculate scores for words and sentences. At
+        this point, the application has the functionality of combining
+        and ranking the sentences, aiming at selecting sentences with
+        the highest scores. Finally, the resultant summary can be
+        translated from the language of the original input text to
+        another one.</textarea>
+        
+        <button onClick="NLP()">Test it</button>
+        <p id="p11"></p>
+        <p id="p1"></p>
+        <p id="p2"></p>
+        <p id="p3"></p>
+        <p id="p4"></p>
+        <p id="p5"></p>
+        <p id="p6"></p>
+        <p id="p7"></p>
+        <p id="p8"></p>
+
+        </center>
+    </div>
+    <script src="./scripts/fixText.js"></script>
+    <script src="./scripts/frequenceSentece.js"></script>
+    <script src="./scripts/frequenceText.js"></script>
+    <script src="./scripts/removeStopWords.js"></script>
+    <script src="./scripts/TF-IDF.js"></script>
+    <script src="./scripts/upper-case.js"></script>
+    <script src="./scripts/wordFrequency.js"></script>
+    <scrip src="./scripts/translate-api.js"></script>
+    <script src="./scripts/Summarizer.js"></script>
+    
+
+
+
+
+
+
+<script>
+
+
+function NLP(){
+
+    
+var originLanguages = "";
+var stringTranslated = "";
+var text = document.getElementById("textarea");
+var string = text.value//translate(text.value, stringTranslated, originLanguages);
+var numbers = string.match(/[-]{0,1}[\d]*[\.]{0,1}[\d]+/g);
+var sentence = "";
+var words = string.match(/(\w|\s)*\w(?=")|[\w\u00C0-\u00FF]+/g);
+var sentences = new Array();
+var purifiered;
+var withoutStopWords;
+var arrayRelevantWords = []; //new Array where will be storing the relevent words in string
+var arrayObjectWord = [];
+var arrayObjectSentence = []; // sentences with only RelevantWords
+
+string = removeHtmlXml(string);
+string = fixText(string);
+
+function splitText(string) {
+    for (i = 0; i < string.length; i++){
+
+        //PRIMEIRO IF
+        /*checar se o elemento do array string é diferente do casos de espaço, vírgula e ponto*/
+            sentence += string[i];
+            //SEGUNDO I                
+  
+            if (string[i] == "." || string[i] == "?" || string[i] == ":" || string[i] == ";") { 
+
+                if('0123456789'.indexOf(string[i+1]) == -1){
+                if(string[i+1] == "." && string[i+2] == "." ){
+                    sentence += string[i+1];
+                    sentence += string[i+2];
+                    sentences.push(sentence);
+                    sentence = "";
+                    i += 2;
+                } else{
+                    sentences.push(sentence);
+                    sentence = "";
+                }
+            }
+        }
+    }
+}
+splitText(string);
+purifiered = sentences.join(""); //agora a função join, junta todos os elementos do array sentences lol
+purifiered = purifiered.replace(",", " ");  //função replace eliminar o elemento d(o parâmetro e o substitue pelo caracter do segundo parâmentro
+withoutStopWords = purifiered.removeStopWords();
+
+for (i = 0; i < words.length; i++) {
+    var regex = new RegExp(/[\w\u00C0-\u00FF]/ig);
+    if (words[i].removeStopWords().match(regex)) {
+        if (arrayRelevantWords.length > 0) {
+            t = true;
+            arrayRelevantWords.forEach(wordR => {
+                if (wordR.toUpperCase() == words[i].toUpperCase()) {
+                    t = false;
+                }
+                
+            });
+
+            if (t == true) {
+                
+                arrayRelevantWords.push(words[i].removeStopWords());
+                    
+            }
+
+        } else {
+            
+            arrayRelevantWords.push(words[i].removeStopWords());
+        }
+    }
+
+
+};
+
+arrayRelevantWords.forEach(word =>{
+    w = word; 
+    word = new Object(); // change the word to object
+    word.word = w;
+    word.numberSentence = [];
+    word.frequenceSen = [];
+    word.frequenceText;
+    word.tf_idf=[];
+    arrayObjectWord.push(word);
+});
+i = 0;
+sentences.forEach(s =>{
+    
+    sentence = s;
+    s = new Object();
+    s.sentence = sentence;
+    s.tf_idf = [];
+    s.upperCaseScore;
+    s.index = i;
+    s.score = 0;
+    
+    arrayObjectSentence.push(s);
+    i++;
+});
+
+checkArrayRelevantWordsString(string, arrayObjectWord); // call function checkArrayStopWords ./frequencia.js
+checkArrayRelevantWordsSentences(sentences, arrayObjectWord);
+
+var p = document.getElementById("p1");
+p.innerHTML = "WORDS: " + words + "<br>"; //
+var p1 = document.getElementById("p11");
+p1.innerHTML = "NUMBERS: "+numbers+"<br>";
+var p2 = document.getElementById("p2");
+p2.innerHTML = "SENTENCES: " + sentences + "<br>";
+var p3 = document.getElementById("p3");
+p3.innerHTML = "PURIFIERED: " + purifiered + "<br>";
+var p4 = document.getElementById("p4");
+p4.innerHTML = "WITHOUTSTOPWORDS: " + withoutStopWords + "<br>";
+//testes caso precise
+//var p5 = document.getElementById("p5");
+//p5.innerHTML = "FREQUENCETEXT: " + arrayRelevantWordsText + "<br>" + arrayFrequenceText;
+//var p6 = document.getElementById("p6");
+// p6.innerHTML = "FREQUENCESenENTENCE: " + arrayWordsSentence + "<br>" + "INDEXSENTENCE: " + numberSentence + "<br>" + "FREQUENCEBYSENTENCE: " + arrayFrequenceSenentence;
+    
+
+
+var sentencesWithoutStopWords = [];
+
+for (i = 0; i < sentences.length; i++) {
+    var swsw = sentences[i].removeStopWords();
+
+sentencesWithoutStopWords.push(swsw);
+
+}       
+
+function printForEach() {
+    p7.innerHTML = ""; //para não acumular quando chamar a function mais de uma vez
+    var i = 0; //contador para arrayFrequenceText
+
+    arrayObjectWord.forEach(objectWord => {
+        p7.innerHTML = p7.innerHTML +
+            "word: " + objectWord.word + "<br>NumberSentence: " + objectWord.numberSentence +
+            "<br>Frenquece: " + objectWord.frequenceSen + "<br>" + "Frenquence text: " +
+            objectWord.frequenceText + "<br>" + "TF-IDF: " + objectWord.tf_idf + "<br><br>";
+        i++;
+
+    });
+    
+    
+    // new problem rapical detectada 
+};
+
+
+
+upperCase(arrayObjectSentence, words, arrayObjectWord);
+TF_IDF(arrayObjectSentence, arrayObjectWord);
+
+var p7 = document.getElementById("p7");
+p7.innerHtml = printForEach();
+var p8 = document.getElementById("p8");
+    p8.innerHTML = "";
+    arrayObjectSentence.forEach(S => { 
+   p8.innerHTML = p8.innerHTML +"Index: "+S.index+"<br>"+"Score- uppercase : "+ S.upperCaseScore+"<br>"+ "TF-IDF: " +S.tf_idf+"<br>";
+    });
+
+    arrayObjectSentence.forEach(S =>{
+        
+    S.score += S.tf_idf;
+    });
+
+    
+    console.log(summarizer(arrayObjectSentence));
+};
+
+    </script>
+</body>
+</html>

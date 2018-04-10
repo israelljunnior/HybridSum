@@ -1,0 +1,14 @@
+{
+  "name": "hybridsum",
+  "version": "1.1.0",
+  "description": "",
+  "main": "TF-IDF.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Israel Gomes de Sena Junior, Henrique Nunes",
+  "license": "ISC",
+  "dependencies": {
+    "google-translate-api": "^2.3.0"
+  }
+}
